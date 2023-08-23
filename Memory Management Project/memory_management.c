@@ -1,42 +1,5 @@
 #include "memory_management.h"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void free(void *v)
 {
 	uint8_t *c;
@@ -82,7 +45,7 @@ void* malloc(size_t n)
 			mptr += n;
 			return v;
 		}
-		free(mptr);	/* drop reference to this page */
+		free(mptr);	
 		mptr = ROUNDDOWN(mptr + PGSIZE, PGSIZE);
 	}
 
@@ -108,7 +71,7 @@ void* malloc(size_t n)
 	}
 
 	ref = (uint32_t*) (mptr + i - 4);
-	*ref = 2;	/* reference for mptr, reference for returned block */
+	*ref = 2;	/* reference for returned block */
 	v = mptr;
 	mptr += n;
 	return v;
