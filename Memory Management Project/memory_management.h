@@ -1,3 +1,5 @@
+// this file needs to be inside of the user space of the xv6 operating system
+// as it requires types.h and user.h to be included
 #include "../kernel/types.h"
 //#include <stddef.h>
 //#include <stdbool.h>
