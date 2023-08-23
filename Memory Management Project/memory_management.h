@@ -1,52 +1,23 @@
-#include <inc/lib.h>
+#include "../kernel/types.h"
+//#include <stddef.h>
+//#include <stdbool.h>
+#include "user.h"
 
+// Structure of my linked list malloc/free implementation
+typedef struct linkedListNode {
+    int size;
+    int isThisNodeFree;
+    struct linkedListNode* nextItemPointer;
+} LinkedListNode;
 
+// Used to keep track of the size of the linkedListNode structure
+#define STRUCT_SIZE sizeof(LinkedListNode)
+// Defines some macros here so the program wouldn't be dependent on certain
+// libraries
+#define NULL 0
+#define true 1
+#define false 0
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-enum
-{
-	MAXMALLOC = 1024*1024	/* max size of one allocated chunk */
-};
-
-#define PTE_CONTINUED 0x400
-
-static uint8_t *mbegin = (uint8_t*) 0x08000000;
-static uint8_t *mend   = (uint8_t*) 0x10000000;
-static uint8_t *mptr;
-
-
-void free(void *v);
-void* malloc(size_t n);
-static int isfree(void *v, size_t n);
+// Function constructors
+void* _malloc(int size);
+void _free(void *ptr);
