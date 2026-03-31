@@ -1,45 +1,63 @@
-# XV6 OS Enhancement Project
+# XV6 Modified
 
-## Project Overview
+> Built a custom memory allocator (`malloc` / `free`) from scratch using a linked.
 
-This project enhances the XV6 operating system by adding additional user-space programs and optimizing existing ones for improved efficiency and added functionality. A significant part of the enhancement includes a custom memory management system that implements `malloc` and `free` functionality using a linked list to manage dynamic memory allocation efficiently. There is a .pdf report detailing how this works in the folder. 
+## What is this?
 
-## Memory Management: `memoryManagement.c` and `memoryManagement.h`
+MIT's [XV6](https://github.com/mit-pdos/xv6-public) is a teaching-oriented reimplementation of Unix v6, rewritten for modern RISC-V architecture. I wanted to see how the things I use every day (processes, memory, filesystems) actually work under the hood. Plus, it's Unix, so the Kernel is editable (:
 
-### Overview
-The memory management component introduces a custom implementation of dynamic memory allocation (`_malloc`) and deallocation (`_free`) based on a linked list structure. This system tracks allocated memory blocks and manages free space more efficiently compared to the standard implementation, with features like splitting and merging memory blocks to reduce fragmentation.
+The main feature here is a custom memory allocator (`_malloc` / `_free`) built from scratch. There's a [detailed design document](./Memory%20Management%20Project/memory_management_design.pdf) if you want the full picture.
 
-### Key Features
+## The Interesting Bits
 
-1. **Linked List Structure for Memory Blocks**  
-   The system uses a linked list (`LinkedListNode`) to track allocated and free memory blocks. Each node in the list represents a block of memory and contains:
-   - `size`: The size of the allocated block.
-   - `isThisNodeFree`: A flag indicating whether the block is free or in use.
-   - `nextItemPointer`: A pointer to the next node in the list.
+### Why build malloc?
 
-2. **Efficient Memory Allocation** (`_malloc`)  
-   - **First-fit strategy**: The `_malloc` function traverses the linked list to find the first free block that can accommodate the requested size.
-   - **Heap Expansion**: If no suitable free block is found, the heap is expanded using `sbrk()` to create a new block.
-   - **Block Splitting**: If a free block is larger than required, it can be split to maximize memory usage (though the splitting logic is currently simplified for this version).
+When you call `malloc`, you're asking the runtime to find a chunk of free memory big enough for your data. Behind the scenes, the allocator juggles allocated and freed blocks, trying to satisfy future requests without wasting too much space or fragmenting memory into unusable minature blocks.
 
-3. **Memory Deallocation and Block Merging** (`_free`)  
-   - When freeing a memory block, the system attempts to merge adjacent free blocks to reduce fragmentation and avoid leaving small unusable chunks of memory.
-   - The merging logic checks both the previous and next nodes in the linked list, combining blocks when possible.
+### The Linked List Approach
 
-### How it Works
+Each memory block carries its own bookkeeping:
 
-- **Initialization**:  
-  The linked list is initialized upon the first call to `_malloc`. The head node (`headOfLinkedList`) starts with zero size and is marked as in use.
-  
-- **Memory Allocation**:  
-  When a new memory block is requested, `_malloc` checks the linked list for a suitable free block. If none is found, it requests additional memory from the OS using `sbrk()`. The new block is added to the linked list, and the pointer to the allocated memory is returned (offset by the size of the metadata structure to protect it from being overwritten).
+```c
+typedef struct LinkedListNode {
+    int size;                              // How much data space this block holds
+    int isThisNodeFree;                    // Is this block available?
+    struct LinkedListNode *nextItemPointer; // Next block in the list
+} LinkedListNode;
+```
 
-- **Memory Deallocation**:  
-  When a block is freed, `_free` marks the block as available for reuse and attempts to merge adjacent free blocks to optimize memory usage.
+When you call `_malloc`, it scans this linked list using a **first-fit** strategy (finds the first free block that fits). If nothing works, it calls `sbrk()` to grab more heap from the OS.
 
-### Code Comments
-Many `printf` statements have been commented out in the code, allowing developers to debug the memory management functions easily. By uncommenting these lines, you can see how the linked list nodes are being allocated, traversed, and freed.
+When you call `_free`, it marks the block as free, then checks if the blocks next to it are also free. If they are, it merges them together. This keeps fragmentation from piling up.
 
----
+The metadata lives _in-band_ with the data, right before the pointer I return to you. So the user gets `pointer + 1`, keeping the bookkeeping safe from accidental overwrites.
 
-This is one part of the larger XV6 project that improves system functionality through optimized user programs and resource management. More details on the additional user programs and other optimizations will be provided soon.
+## Project Structure
+
+```
+XV6_Modified/
+├── Memory Management Project/        # Standalone allocator (clean version)
+│   ├── memory_management.c            # _malloc / _free implementation
+│   ├── memory_management.h
+│   └── memory_management_design.pdf   # Full design writeup
+└── XV6 Files/
+    ├── kernel/                       # XV6 kernel source
+    └── user/                          # User programs + allocator integrated
+```
+
+The `Memory Management Project/` folder has a clean, standalone version of the allocator that you can read without getting lost in XV6's build system.
+
+## Running It
+
+XV6 runs on QEMU emulating RISC-V. Check MIT's XV6 documentation for build instructions, or grab the standalone allocator in `Memory Management Project/` and compile it with a regular C compiler to see it work.
+
+## Tech Stack
+
+- **C** — everything
+- **RISC-V** — target architecture
+- **QEMU** — for emulation
+- **XV6** — base operating system
+
+## More Details
+
+For the full technical breakdown, architecture decisions, algorithm details, and the reasoning behind each choice, see [the design document](./Memory%20Management%20Project/memory_management_design.pdf).
