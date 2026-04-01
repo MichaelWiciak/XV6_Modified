@@ -1,2 +1,18 @@
-# Auto detect text files and perform LF normalization
 * text=auto
+
+*.c text
+*.h text
+*.S text
+*.pl text eol=lf
+Makefile text eol=lf
+*.md text
+
+*.pdf binary
+*.png binary
+*.jpg binary
+
+*.o binary
+*.d binary
+*.asm binary
+*.sym binary
+*.out binary

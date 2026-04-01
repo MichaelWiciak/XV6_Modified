@@ -1,1 +1,27 @@
+# Build artifacts
+*.o
+*.d
+*.asm
+*.sym
+*.out
+*~
 .DS_Store
+
+# Source .ld files (linker scripts) - keep these
+!xv6/kernel/*.ld
+!xv6/user/*.ld
+
+# Compiled binaries
+a.out
+initcode
+initcode.out
+_*
+
+# Editor swap files
+*.swp
+*.swo
+
+# xv6 disk images
+fs.img
+xv6.img
+xv6memfs.img
