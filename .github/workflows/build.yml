@@ -28,7 +28,7 @@ jobs:
 
       - name: Check build artifacts
         run: |
-          test -f xv6/kernel && echo "Kernel built successfully" || exit 1
+          test -f xv6/kernel/kernel && echo "Kernel built successfully" || exit 1
 
       - name: Clean
         run: |
