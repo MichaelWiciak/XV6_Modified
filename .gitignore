@@ -3,10 +3,13 @@
 *.d
 *.asm
 *.sym
-*.ld
 *.out
 *~
 .DS_Store
+
+# Source .ld files (linker scripts) - keep these
+!xv6/kernel/*.ld
+!xv6/user/*.ld
 
 # Compiled binaries
 a.out
