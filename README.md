@@ -40,9 +40,13 @@ XV6_Modified/
 │   ├── memory_management.c            # _malloc / _free implementation
 │   ├── memory_management.h
 │   └── memory_management_design.pdf   # Full design writeup
-└── XV6 Files/
-    ├── kernel/                       # XV6 kernel source
-    └── user/                          # User programs + allocator integrated
+├── xv6/
+│   ├── Makefile                       # Build system
+│   ├── kernel/                        # XV6 kernel source
+│   └── user/                          # User programs + allocator integrated
+└── .github/
+    └── workflows/
+        └── build.yml                  # CI workflow
 ```
 
 The `Memory Management Project/` folder has a clean, standalone version of the allocator that you can read without getting lost in XV6's build system.

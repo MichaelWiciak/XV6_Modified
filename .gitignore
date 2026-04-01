@@ -1,1 +1,25 @@
+# Build artifacts
+*.o
+*.d
+*.asm
+*.sym
+*.ld
+*.out
+*~
 .DS_Store
+
+# Compiled binaries
+a.out
+kernel
+initcode
+initcode.out
+_*
+
+# Editor swap files
+*.swp
+*.swo
+
+# xv6 disk images
+fs.img
+xv6.img
+xv6memfs.img
