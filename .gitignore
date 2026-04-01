@@ -10,7 +10,6 @@
 
 # Compiled binaries
 a.out
-kernel
 initcode
 initcode.out
 _*
