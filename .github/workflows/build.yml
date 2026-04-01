@@ -22,15 +22,14 @@ jobs:
         run: |
           sudo apt-get install -y qemu-system-misc
 
-      - name: Enter xv6 directory
-        run: cd xv6
-
       - name: Build
-        run: make
+        run: |
+          cd xv6 && make
 
       - name: Check build artifacts
         run: |
           test -f xv6/kernel && echo "Kernel built successfully" || exit 1
 
       - name: Clean
-        run: make clean
+        run: |
+          cd xv6 && make clean
