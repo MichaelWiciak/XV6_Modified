@@ -1,6 +1,6 @@
 # XV6 Modified
 
-> Built a custom memory allocator (`malloc` / `free`) from scratch using a linked.
+> Built a custom memory allocator (`malloc` / `free`) from scratch using a linked list.
 
 ## What is this?
 
